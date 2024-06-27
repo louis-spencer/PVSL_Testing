@@ -28,12 +28,16 @@ class Window(QDialog):
         # Just some button connected to `plot` method
         self.button = QPushButton('Plot')
         self.button.clicked.connect(self.plot)
+        
+        self.button2 = QPushButton('Test')
+        self.button2.clicked.connect(self.test)
 
         # set the layout
         layout = QVBoxLayout()
         layout.addWidget(self.toolbar)
         layout.addWidget(self.canvas)
         layout.addWidget(self.button)
+        layout.addWidget(self.button2)
         self.setLayout(layout)
 
     def plot(self):
@@ -55,6 +59,11 @@ class Window(QDialog):
 
         # refresh canvas
         self.canvas.draw()
+        
+    def test(self):
+        '''do stuff'''
+        print("test worked")
+        return 0
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
