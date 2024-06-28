@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
 	 QWidget,
 	 QCheckBox
 )
-from PyQt5 import QtCore
+from PyQt5 import QtCore, QtTest
 
 import matplotlib
 matplotlib.use('Agg')
@@ -30,15 +30,22 @@ class MainWindow(QMainWindow):
 		self.button = QPushButton("Plot")
 		self.button.clicked.connect(self.plot)
 
+		# remove checkbox
 		self.checkbox = QCheckBox("Show/Hide")
 		self.checkbox.stateChanged.connect(self.show_hide)
+
+		self.button2 = QPushButton("Change color")
+		self.button2.clicked.connect(self.change_color)
+		self.color_data = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+		self.color = 0
 
 		self.data = [0.1 * random.random() for i in range(10)]
 
 		layout.addWidget(self.toolbar)
 		layout.addWidget(self.canvas)
 		layout.addWidget(self.button)
-		layout.addWidget(self.checkbox)
+		#layout.addWidget(self.checkbox)
+		layout.addWidget(self.button2)
 
 		widget = QWidget()
 		widget.setLayout(layout)
@@ -47,17 +54,33 @@ class MainWindow(QMainWindow):
 
 	def plot(self):
 		self.data = [0.1 * random.random() for i in range(10)]
-		self.figure.clear()
-		ax = self.figure.add_subplot(111)
-		ax.plot(self.data, '-r')
-		self.canvas.draw()
+		self.reload_graph()
 
 	def show_hide(self):
 		if self.checkbox.isChecked():
 			self.canvas.hide()
+			#self.checkbox.setText("Checked")
 		else:
 			#QtCore.QTimer.singleShot(3000, lambda: self.canvas.show()) 
 			self.canvas.show()
+			#self.checkbox.setText("Unchecked")
+
+	def change_color(self):
+		# add rave mode
+		modifiers = QApplication.keyboardModifiers()
+		if modifiers == QtCore.Qt.ShiftModifier: num = 30
+		else: num = 1
+		for i in range(num):
+			self.color = (self.color + 1) % len(self.color_data)
+			self.reload_graph()
+			QtTest.QTest.qWait(5)
+
+	def reload_graph(self):
+		self.figure.clear()
+		ax = self.figure.add_subplot(111)
+		ax.plot(self.data, '-' + self.color_data[self.color])
+		self.canvas.draw()
+
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
