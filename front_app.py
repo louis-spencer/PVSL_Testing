@@ -1,66 +1,82 @@
 import sys
 
+# PyQt5 for the GUI and app dev
 from PyQt5.QtWidgets import (
     QApplication,
     QCheckBox,
-    QComboBox,
-    QDateEdit,
-    QDateTimeEdit,
-    QDial,
-    QDoubleSpinBox,
-    QFontComboBox,
-    QLabel,
-    QLCDNumber,
-    QLineEdit,
     QMainWindow,
-    QProgressBar,
     QPushButton,
-    QRadioButton,
-    QSlider,
-    QSpinBox,
-    QTimeEdit,
     QVBoxLayout,
-    QWidget,
+    QWidget
 )
+from PyQt5 import QtCore, QtTest
 
-# Subclass QMainWindow to customize your application's main window
+# matplotlib for graphical processing
+import matplotlib
+# used for embedding into PyQt GUI
+matplotlib.use('Agg')
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+import matplotlib.pyplot as plt
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
-        self.setWindowTitle("Widgets App")
-
+        # create window
+        
+        self.setWindowTitle("PVSL Temperature and Pressure")
+        # TODO work on custom layout
         layout = QVBoxLayout()
-        widgets = [
-            QCheckBox,
-            QComboBox,
-            QDateEdit,
-            QDateTimeEdit,
-            QDial,
-            QDoubleSpinBox,
-            QFontComboBox,
-            QLCDNumber,
-            QLabel,
-            QLineEdit,
-            QProgressBar,
-            QPushButton,
-            QRadioButton,
-            QSlider,
-            QSpinBox,
-            QTimeEdit,
-        ]
-
-        for w in widgets:
-            layout.addWidget(w())
-
+        
+        # matplotlib, PyQT elements
+        self.figure = plt.figure()
+        self.canvas = FigureCanvas(self.figure)
+        layout.addWidget(self.canvas)
+        self.toolbar = NavigationToolbar(self.canvas, self)
+        layout.addWidget(self.toolbar)
+        
+        # PyQT elements
+        # checkbox for which traces to enable/disable
+        self.checkbox1 = QCheckBox(text="Pressure", parent=self)
+        self.checkbox2 = QCheckBox(text="Temperature", parent=self)
+        self.checkbox_list = [self.checkbox1, self.checkbox2]
+        for c in self.checkbox_list:
+            layout.addWidget(c)
+            c.setChecked(True)
+            c.clicked.connect(self.plot)
+        self.temperature_checkbox = self.pressure_checkbox = True
+        
+        # TODO add buttons for setting the time
+        
+        # TODO add button to be able to export the data
+        
+        #print(dir(self))
+    
         widget = QWidget()
         widget.setLayout(layout)
-
-        # Set the central widget of the Window. Widget will expand
-        # to take up all the space in the window by default.
+        
         self.setCentralWidget(widget)
+        
+        self.plot()
+        
+    def plot(self):
+        #print(dir(self.checkbox1))
+        img = plt.imread(".water.jpg")
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        if not (self.checkbox1.isChecked() or self.checkbox2.isChecked()):
+            ax.imshow(img, extent=[0, 3, 0, 3])
+        if self.checkbox1.isChecked():
+            ax.plot([0, 1, 2, 3], [1, 2, 0, 3])
+        if self.checkbox2.isChecked():
+            ax.plot([0, 1, 2, 3], [3, 1, 2, 0])
+        self.canvas.draw()
+        #plt.show()
+            
 
 app = QApplication(sys.argv)
 window = MainWindow()
 window.show()
 app.exec()
+        
+        

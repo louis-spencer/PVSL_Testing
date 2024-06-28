@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
 		self.button2 = QPushButton("Change color")
 		self.button2.clicked.connect(self.change_color)
-		self.color_data = ['r', 'g', 'b', 'c', 'm', 'y', 'k']
+		self.color_data = list(matplotlib.colors._colors_full_map.values())
 		self.color = 0
 
 		self.data = [0.1 * random.random() for i in range(10)]
@@ -69,16 +69,18 @@ class MainWindow(QMainWindow):
 		# add rave mode
 		modifiers = QApplication.keyboardModifiers()
 		if modifiers == QtCore.Qt.ShiftModifier: num = 30
+		
 		else: num = 1
+
 		for i in range(num):
-			self.color = (self.color + 1) % len(self.color_data)
+			self.color = (self.color + (1 if num == 1 else random.randint(0, len(self.color_data)))) % len(self.color_data)
 			self.reload_graph()
 			QtTest.QTest.qWait(5)
 
 	def reload_graph(self):
 		self.figure.clear()
 		ax = self.figure.add_subplot(111)
-		ax.plot(self.data, '-' + self.color_data[self.color])
+		ax.plot(self.data, '-', color=self.color_data[self.color])
 		self.canvas.draw()
 
 app = QApplication(sys.argv)
