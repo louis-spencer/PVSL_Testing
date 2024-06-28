@@ -1,52 +1,66 @@
 import sys
 
-from PyQt5.QtCore import Qt
-
-from PyQt5.QtGui import QPalette, QColor
-
 from PyQt5.QtWidgets import (
     QApplication,
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QDateTimeEdit,
+    QDial,
+    QDoubleSpinBox,
+    QFontComboBox,
     QLabel,
+    QLCDNumber,
+    QLineEdit,
     QMainWindow,
+    QProgressBar,
     QPushButton,
-    QTabWidget,
-    QWidget
+    QRadioButton,
+    QSlider,
+    QSpinBox,
+    QTimeEdit,
+    QVBoxLayout,
+    QWidget,
 )
 
-#comment
-#comment 2
-
-#comment 3
-
+# Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("My App")
+        self.setWindowTitle("Widgets App")
 
-        tabs = QTabWidget()
-        tabs.setTabPosition(QTabWidget.West)
-        tabs.setMovable(True)
+        layout = QVBoxLayout()
+        widgets = [
+            QCheckBox,
+            QComboBox,
+            QDateEdit,
+            QDateTimeEdit,
+            QDial,
+            QDoubleSpinBox,
+            QFontComboBox,
+            QLCDNumber,
+            QLabel,
+            QLineEdit,
+            QProgressBar,
+            QPushButton,
+            QRadioButton,
+            QSlider,
+            QSpinBox,
+            QTimeEdit,
+        ]
 
-        for n, color in enumerate(["red", "green", "blue", "yellow"]):
-            tabs.addTab(Color(color), color)
+        for w in widgets:
+            layout.addWidget(w())
 
-        self.setCentralWidget(tabs)
-        
-class Color(QWidget):
+        widget = QWidget()
+        widget.setLayout(layout)
 
-    def __init__(self, color):
-        super(Color, self).__init__()
-        self.setAutoFillBackground(True)
-
-        palette = self.palette()
-        palette.setColor(QPalette.Window, QColor(color))
-        self.setPalette(palette)
-
+        # Set the central widget of the Window. Widget will expand
+        # to take up all the space in the window by default.
+        self.setCentralWidget(widget)
 
 app = QApplication(sys.argv)
-
 window = MainWindow()
 window.show()
-
 app.exec()
