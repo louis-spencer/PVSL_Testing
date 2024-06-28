@@ -14,6 +14,10 @@ from PyQt5.QtWidgets import (
 )
 
 #comment
+#comment 2
+
+#comment 3
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
