@@ -50,6 +50,10 @@ class MainWindow(QMainWindow):
         
         # TODO add button to be able to export the data
         
+        # TODO add tab buttons to change simulation settings
+        
+        # TODO add simulation settings, time presets + custom
+        
         #print(dir(self))
     
         widget = QWidget()
