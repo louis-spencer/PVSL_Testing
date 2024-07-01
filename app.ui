@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>897</width>
+    <width>895</width>
     <height>631</height>
    </rect>
   </property>
@@ -17,25 +17,9 @@
    <bool>false</bool>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QGraphicsView" name="graphicsView">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>2</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-       </widget>
-      </item>
+   <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0,0,0">
+    <item row="0" column="4">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
       <item>
        <widget class="QTabWidget" name="tabWidget">
         <property name="sizePolicy">
@@ -50,7 +34,7 @@
         <property name="currentIndex">
          <number>0</number>
         </property>
-        <widget class="QWidget" name="controls_tab" native="true">
+        <widget class="QWidget" name="controls_tab">
          <attribute name="title">
           <string>Controls</string>
          </attribute>
@@ -94,6 +78,9 @@
              <widget class="QLabel" name="time_remaining">
               <property name="text">
                <string>Time Remaining:</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -185,7 +172,7 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="settings_tab" native="true">
+        <widget class="QWidget" name="settings_tab">
          <attribute name="title">
           <string>Settings</string>
          </attribute>
@@ -230,6 +217,26 @@
           </item>
          </layout>
         </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0" colspan="4">
+     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QDial" name="toolbar"/>
+      </item>
+      <item>
+       <widget class="QGraphicsView" name="canvas">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
        </widget>
       </item>
      </layout>
