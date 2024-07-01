@@ -5,7 +5,9 @@ from PyQt5.QtWidgets import (
 	 QPushButton,
 	 QVBoxLayout,
 	 QWidget,
-	 QCheckBox
+	 QCheckBox,
+	 QGroupBox,
+	 QRadioButton
 )
 from PyQt5 import QtCore, QtTest
 
@@ -40,6 +42,20 @@ class MainWindow(QMainWindow):
 		self.color = 0
 
 		self.data = [0.1 * random.random() for i in range(10)]
+		
+		self.groupBox = QGroupBox("asdf")
+		self.radio1 = QRadioButton("&Radio button 1")
+		self.radio2 = QRadioButton("R&adio button 2")
+		self.radio3 = QRadioButton("Ra&dio button 3")
+		
+		self.radio1.setChecked(True)
+
+		vbox = QVBoxLayout()
+		vbox.addWidget(self.radio1)
+		vbox.addWidget(self.radio2)
+		vbox.addWidget(self.radio3)
+		vbox.addStretch(1)
+		self.groupBox.setLayout(vbox)
 
 		layout.addWidget(self.toolbar)
 		layout.addWidget(self.canvas)
