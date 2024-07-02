@@ -16,86 +16,100 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import matplotlib.pyplot as plt
 
+from datetime import datetime
+
 
 class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
-        # 0 for stopped, 1 for running, 2 for paused
-        self.testing_status = 0
-        # "Run" or "Pause"
-        self.run_pause_text = "Run"
-        # "Reset" or "Stop"
-        self.reset_stop_text = "Reset"
-
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(895, 631)
-        MainWindow.setDockNestingEnabled(False)
+        MainWindow.resize(1049, 690)
+        MainWindow.setDockNestingEnabled(True)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
         self.gridLayout.setObjectName("gridLayout")
-        self.horizontalLayout = QtWidgets.QHBoxLayout()
-        self.horizontalLayout.setObjectName("horizontalLayout")
-        self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
+        self.controls_settings = QtWidgets.QHBoxLayout()
+        self.controls_settings.setObjectName("controls_settings")
+        self.controls_settings_tab = QtWidgets.QTabWidget(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                            QtWidgets.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(
-            self.tabWidget.sizePolicy().hasHeightForWidth())
-        self.tabWidget.setSizePolicy(sizePolicy)
-        self.tabWidget.setTabPosition(QtWidgets.QTabWidget.East)
-        self.tabWidget.setObjectName("tabWidget")
+            self.controls_settings_tab.sizePolicy().hasHeightForWidth())
+        self.controls_settings_tab.setSizePolicy(sizePolicy)
+        self.controls_settings_tab.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.controls_settings_tab.setStyleSheet(u"QPushButton#reset_stop {\n"
+                                                 "	color: red;	\n"
+                                                 "}")
+        self.controls_settings_tab.setTabPosition(QtWidgets.QTabWidget.East)
+        self.controls_settings_tab.setObjectName("controls_settings_tab")
         self.controls_tab = QtWidgets.QWidget()
         self.controls_tab.setObjectName("controls_tab")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.controls_tab)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(self.controls_tab)
+        self.graph_and_system = QtWidgets.QLabel(self.controls_tab)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
                                            QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(
-            self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy)
-        self.label.setScaledContents(False)
-        self.label.setWordWrap(True)
-        self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
-        self.test_container = QtWidgets.QVBoxLayout()
-        self.test_container.setObjectName("test_container")
-        self.run_pause = QtWidgets.QPushButton(self.controls_tab)
+            self.graph_and_system.sizePolicy().hasHeightForWidth())
+        self.graph_and_system.setSizePolicy(sizePolicy)
+        self.graph_and_system.setStyleSheet("")
+        self.graph_and_system.setScaledContents(False)
+        self.graph_and_system.setWordWrap(True)
+        self.graph_and_system.setObjectName("graph_and_system")
+        self.verticalLayout.addWidget(self.graph_and_system)
+        self.pv_test_controls = QtWidgets.QGroupBox(self.controls_tab)
+        self.pv_test_controls.setMouseTracking(False)
+        self.pv_test_controls.setAutoFillBackground(False)
+        self.pv_test_controls.setStyleSheet("")
+        self.pv_test_controls.setObjectName("pv_test_controls")
+        self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.pv_test_controls)
+        self.verticalLayout_4.setContentsMargins(9, 10, 9, -1)
+        self.verticalLayout_4.setSpacing(6)
+        self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.run_pause = QtWidgets.QPushButton(self.pv_test_controls)
+        self.run_pause.setStyleSheet("")
+        self.run_pause.setCheckable(False)
+        self.run_pause.setDefault(False)
         self.run_pause.setObjectName("run_pause")
-        # add run_pause functionality
-        self.run_pause.clicked.connect(self.run_pause_func)
-
-        self.test_container.addWidget(self.run_pause)
-        self.reset_stop = QtWidgets.QPushButton(self.controls_tab)
+        self.verticalLayout_4.addWidget(self.run_pause)
+        self.reset_stop = QtWidgets.QPushButton(self.pv_test_controls)
         self.reset_stop.setObjectName("reset_stop")
-        # add reset_stop functionality
-        #self.reset_stop.clicked.connect(self.reset_stop_func)
-
-        self.test_container.addWidget(self.reset_stop)
-        self.time_remaining = QtWidgets.QLabel(self.controls_tab)
+        self.verticalLayout_4.addWidget(self.reset_stop)
+        self.time_remaining = QtWidgets.QLabel(self.pv_test_controls)
         self.time_remaining.setWordWrap(True)
         self.time_remaining.setObjectName("time_remaining")
-        self.test_container.addWidget(self.time_remaining)
-        self.verticalLayout.addLayout(self.test_container)
+        self.verticalLayout_4.addWidget(self.time_remaining)
+        self.verticalLayout.addWidget(self.pv_test_controls)
         spacerItem = QtWidgets.QSpacerItem(20, 40,
                                            QtWidgets.QSizePolicy.Minimum,
                                            QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
-        self.graph_settings_container = QtWidgets.QVBoxLayout()
-        self.graph_settings_container.setContentsMargins(-1, 5, -1, 5)
+        self.graph_controls = QtWidgets.QGroupBox(self.controls_tab)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred,
+                                           QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.graph_controls.sizePolicy().hasHeightForWidth())
+        self.graph_controls.setSizePolicy(sizePolicy)
+        self.graph_controls.setObjectName("graph_controls")
+        self.graph_settings_container = QtWidgets.QVBoxLayout(
+            self.graph_controls)
+        self.graph_settings_container.setContentsMargins(-1, 5, -1, 0)
         self.graph_settings_container.setSpacing(0)
         self.graph_settings_container.setObjectName("graph_settings_container")
-        self.pressure_checkbox = QtWidgets.QCheckBox(self.controls_tab)
+        self.pressure_checkbox = QtWidgets.QCheckBox(self.graph_controls)
         self.pressure_checkbox.setStyleSheet("")
         self.pressure_checkbox.setIconSize(QtCore.QSize(24, 24))
         self.pressure_checkbox.setChecked(True)
         self.pressure_checkbox.setObjectName("pressure_checkbox")
         self.graph_settings_container.addWidget(self.pressure_checkbox)
-        self.temperature_checkbox = QtWidgets.QCheckBox(self.controls_tab)
+        self.temperature_checkbox = QtWidgets.QCheckBox(self.graph_controls)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum,
                                            QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -107,15 +121,21 @@ class Ui_MainWindow(object):
         self.temperature_checkbox.setChecked(True)
         self.temperature_checkbox.setObjectName("temperature_checkbox")
         self.graph_settings_container.addWidget(self.temperature_checkbox)
-        self.legend_checkbox = QtWidgets.QCheckBox(self.controls_tab)
+        self.legend_checkbox = QtWidgets.QCheckBox(self.graph_controls)
         self.legend_checkbox.setChecked(True)
         self.legend_checkbox.setObjectName("legend_checkbox")
         self.graph_settings_container.addWidget(self.legend_checkbox)
-        self.verticalLayout.addLayout(self.graph_settings_container)
-        self.export_2 = QtWidgets.QPushButton(self.controls_tab)
-        self.export_2.setObjectName("export_2")
-        self.verticalLayout.addWidget(self.export_2)
-        self.tabWidget.addTab(self.controls_tab, "")
+        self.verticalLayout.addWidget(self.graph_controls)
+        self.save_data_to = QtWidgets.QLabel(self.controls_tab)
+        self.save_data_to.setObjectName("save_data_to")
+        self.verticalLayout.addWidget(self.save_data_to)
+        self.save = QtWidgets.QPushButton(self.controls_tab)
+        self.save.setObjectName("save")
+        self.verticalLayout.addWidget(self.save)
+        """attach save_file_dialog() function to button"""
+        self.save.clicked.connect(self.save_file_dialog)
+
+        self.controls_settings_tab.addTab(self.controls_tab, "")
         self.settings_tab = QtWidgets.QWidget()
         self.settings_tab.setObjectName("settings_tab")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.settings_tab)
@@ -123,37 +143,68 @@ class Ui_MainWindow(object):
         self.settings_description = QtWidgets.QLabel(self.settings_tab)
         self.settings_description.setObjectName("settings_description")
         self.verticalLayout_3.addWidget(self.settings_description)
-        self.time_container = QtWidgets.QVBoxLayout()
-        self.time_container.setObjectName("time_container")
-        self.label_3 = QtWidgets.QLabel(self.settings_tab)
-        self.label_3.setObjectName("label_3")
-        self.time_container.addWidget(self.label_3)
+        self.choose_date = QtWidgets.QLabel(self.settings_tab)
+        self.choose_date.setObjectName("choose_date")
+        self.verticalLayout_3.addWidget(self.choose_date)
         self.dateTimeEdit = QtWidgets.QDateTimeEdit(self.settings_tab)
         self.dateTimeEdit.setCalendarPopup(True)
         self.dateTimeEdit.setObjectName("dateTimeEdit")
-        self.time_container.addWidget(self.dateTimeEdit)
-        self.verticalLayout_3.addLayout(self.time_container)
+        self.verticalLayout_3.addWidget(self.dateTimeEdit)
+
+        # auto set date and time
+        # every time tab is switched, update the time?
+        self.update_datetime()
+
+        self.choose_duration = QtWidgets.QLabel(self.settings_tab)
+        self.choose_duration.setObjectName("choose_duration")
+        self.verticalLayout_3.addWidget(self.choose_duration)
+        self.comboBox = QtWidgets.QComboBox(self.settings_tab)
+        self.comboBox.setObjectName("comboBox")
+        self.comboBox.addItem("")
+        self.comboBox.setItemText(0, "")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.comboBox.addItem("")
+        self.verticalLayout_3.addWidget(self.comboBox)
+        self.note = QtWidgets.QLabel(self.settings_tab)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Ignored,
+                                           QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(
+            self.note.sizePolicy().hasHeightForWidth())
+        self.note.setSizePolicy(sizePolicy)
+        self.note.setScaledContents(False)
+        self.note.setWordWrap(True)
+        self.note.setObjectName("note")
+        self.verticalLayout_3.addWidget(self.note)
         spacerItem1 = QtWidgets.QSpacerItem(20, 40,
                                             QtWidgets.QSizePolicy.Minimum,
                                             QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem1)
-        self.tabWidget.addTab(self.settings_tab, "")
-        self.horizontalLayout.addWidget(self.tabWidget)
-        self.gridLayout.addLayout(self.horizontalLayout, 0, 4, 1, 1)
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_2.setContentsMargins(-1, -1, -1, 0)
-        self.verticalLayout_2.setObjectName("verticalLayout_2")
-
-        # inject matplotlib canvas and figure into PyQt
-        #self.canvas = QtWidgets.QGraphicsView(self.centralwidget)
+        self.controls_settings_tab.addTab(self.settings_tab, "")
+        self.controls_settings.addWidget(self.controls_settings_tab)
+        self.gridLayout.addLayout(self.controls_settings, 0, 4, 1, 1)
+        self.graph_window = QtWidgets.QVBoxLayout()
+        self.graph_window.setContentsMargins(-1, -1, -1, 0)
+        self.graph_window.setObjectName("graph_window")
+        """matplotlib injection"""
+        # replace previous self.canvas with FigureCanvasQTAgg
+        # replace previous self.toolbar with NavigationToolbar2QT
         self.figure = plt.figure()
         self.canvas = FigureCanvasQTAgg(self.figure)
-
-        # inject matplotlib toolbar into PyQt
-        #self.toolbar = QtWidgets.QDial(self.centralwidget)
         self.toolbar = NavigationToolbar2QT(self.canvas)
+
+        #self.toolbar = QtWidgets.QDial(self.centralwidget)
         self.toolbar.setObjectName("toolbar")
-        self.verticalLayout_2.addWidget(self.toolbar)
+        self.graph_window.addWidget(self.toolbar)
+        #self.canvas = QtWidgets.QGraphicsView(self.centralwidget)
 
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                            QtWidgets.QSizePolicy.Expanding)
@@ -163,8 +214,8 @@ class Ui_MainWindow(object):
             self.canvas.sizePolicy().hasHeightForWidth())
         self.canvas.setSizePolicy(sizePolicy)
         self.canvas.setObjectName("canvas")
-        self.verticalLayout_2.addWidget(self.canvas)
-        self.gridLayout.addLayout(self.verticalLayout_2, 0, 0, 1, 4)
+        self.graph_window.addWidget(self.canvas)
+        self.gridLayout.addLayout(self.graph_window, 0, 0, 1, 4)
         self.gridLayout.setColumnStretch(0, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -172,52 +223,96 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.controls_settings_tab.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-        # run method once
-        self.run_pause_func()
+        MainWindow.setTabOrder(self.controls_settings_tab, self.run_pause)
+        MainWindow.setTabOrder(self.run_pause, self.reset_stop)
+        MainWindow.setTabOrder(self.reset_stop, self.pressure_checkbox)
+        MainWindow.setTabOrder(self.pressure_checkbox,
+                               self.temperature_checkbox)
+        MainWindow.setTabOrder(self.temperature_checkbox, self.legend_checkbox)
+        MainWindow.setTabOrder(self.legend_checkbox, self.dateTimeEdit)
+        MainWindow.setTabOrder(self.dateTimeEdit, self.comboBox)
+        MainWindow.setTabOrder(self.comboBox, self.canvas)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(
-            _translate("MainWindow", "Graph and system controls"))
-        self.run_pause.setText(_translate("MainWindow", self.run_pause_text))
+        MainWindow.setWindowTitle(
+            _translate("MainWindow", "PVSL Temperature and Pressure"))
+        self.graph_and_system.setText(
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p><span style=\" font-size:14pt;\">Graph and system controls</span></p></body></html>"
+            ))
+        self.pv_test_controls.setTitle(
+            _translate("MainWindow", "PV Test Controls"))
+        self.run_pause.setText(_translate("MainWindow", "Run"))
         self.reset_stop.setText(_translate("MainWindow", "Reset"))
-        self.time_remaining.setText(_translate("MainWindow",
-                                               "Time Remaining:"))
+        self.time_remaining.setText(_translate("MainWindow", "Remaining:"))
+        self.graph_controls.setTitle(_translate("MainWindow",
+                                                "Graph Controls"))
         self.pressure_checkbox.setText(_translate("MainWindow", "Pressure"))
         self.temperature_checkbox.setText(
             _translate("MainWindow", "Temperature"))
         self.legend_checkbox.setText(_translate("MainWindow", "Legend"))
-        self.export_2.setText(_translate("MainWindow", "Export"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.controls_tab),
-                                  _translate("MainWindow", "Controls"))
+        self.save_data_to.setText(
+            _translate("MainWindow", "Save data to file:"))
+        self.save.setText(_translate("MainWindow", "Save"))
+        self.controls_settings_tab.setTabText(
+            self.controls_settings_tab.indexOf(self.controls_tab),
+            _translate("MainWindow", "Controls"))
         self.settings_description.setText(
-            _translate("MainWindow", "Test and app settings"))
-        self.label_3.setText(_translate("MainWindow", "Choose date and time:"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.settings_tab),
-                                  _translate("MainWindow", "Settings"))
+            _translate(
+                "MainWindow",
+                "<html><head/><body><p><span style=\" font-size:14pt;\">App settings</span></p></body></html>"
+            ))
+        self.choose_date.setText(
+            _translate("MainWindow", "Choose date and time:"))
+        self.choose_duration.setText(
+            _translate("MainWindow", "Choose duration:"))
+        self.comboBox.setItemText(1, _translate("MainWindow", "10min"))
+        self.comboBox.setItemText(2, _translate("MainWindow", "20min"))
+        self.comboBox.setItemText(3, _translate("MainWindow", "30min"))
+        self.comboBox.setItemText(4, _translate("MainWindow", "45min"))
+        self.comboBox.setItemText(5, _translate("MainWindow", "1hr"))
+        self.comboBox.setItemText(6, _translate("MainWindow", "2hr"))
+        self.comboBox.setItemText(7, _translate("MainWindow", "4hr"))
+        self.comboBox.setItemText(8, _translate("MainWindow", "10hr"))
+        self.comboBox.setItemText(9, _translate("MainWindow", "Custom..."))
+        self.note.setText(
+            _translate(
+                "MainWindow",
+                "Note: unspecified duration will run until manually stopped "))
+        self.controls_settings_tab.setTabText(
+            self.controls_settings_tab.indexOf(self.settings_tab),
+            _translate("MainWindow", "Settings"))
 
-    def run_pause_func(self):
-        if self.testing_status == 1:
-            self.run_pause_text = "Pause"
-            self.reset_stop_text = "Stop"
-            self.testing_status = 2
-        else:
-            self.run_pause_text = "Run"
-            self.reset_stop_text = "Reset"
-            self.testing_status = 1
-            self.plot()
-        self.run_pause.setText(self.run_pause_text)
-        self.reset_stop.setText(self.reset_stop_text)
+    def save_file_dialog(self):
+        """
+        Saves the test results to a file specified by filepath
+        """
+        # open file dialog
+        fname = QtWidgets.QFileDialog.getOpenFileName(
+            self.centralwidget, "Open File", "",
+            "All Files (*);;Text Files(*.txt);;CSV Files(*.csv)")
+        if fname:
+            print(str(fname))
+        # TODO add functionality to write to file
 
-    def plot(self):
-        self.figure.clear()
-        ax = self.figure.add_subplot(111)
-        ax.plot([3, 5, 1, 2, 0], '-')
-        self.canvas.draw()
+    def update_datetime(self):
+        """
+        Updates the app datetime to match internal Raspberry Pi datetime.
+        """
+        # get the current raspberry pi datetime with datetime module
+        current_dt = datetime.now()
+        # convert to necessary datatype
+        current_QDate = QtCore.QDate(current_dt.year, current_dt.month,
+                                     current_dt.day)
+        current_QTime = QtCore.QTime(current_dt.hour, current_dt.minute,
+                                     current_dt.second)
+        # update the calendar datetime field
+        self.dateTimeEdit.setDate(current_QDate)
+        self.dateTimeEdit.setTime(current_QTime)
 
 
 if __name__ == "__main__":
@@ -226,5 +321,5 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    MainWindow.show()
+    MainWindow.showMaximized()
     sys.exit(app.exec_())

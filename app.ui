@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1049</width>
-    <height>607</height>
+    <height>690</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,9 +19,9 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" columnstretch="1,0,0,0,0">
     <item row="0" column="4">
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+     <layout class="QHBoxLayout" name="controls_settings" stretch="0">
       <item>
-       <widget class="QTabWidget" name="tabWidget">
+       <widget class="QTabWidget" name="controls_settings_tab">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -30,6 +30,11 @@
         </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton#reset_stop {
+	color: red;	
+}</string>
         </property>
         <property name="tabPosition">
          <enum>QTabWidget::East</enum>
@@ -43,7 +48,7 @@
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="graph_and_system">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -54,7 +59,7 @@
              <string notr="true"/>
             </property>
             <property name="text">
-             <string>Graph and system controls</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;Graph and system controls&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="scaledContents">
              <bool>false</bool>
@@ -65,7 +70,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QGroupBox" name="PVTestControls">
+           <widget class="QGroupBox" name="pv_test_controls">
             <property name="mouseTracking">
              <bool>false</bool>
             </property>
@@ -93,6 +98,9 @@
              </property>
              <item>
               <widget class="QPushButton" name="run_pause">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
                <property name="text">
                 <string>Run</string>
                </property>
@@ -138,7 +146,13 @@
            </spacer>
           </item>
           <item>
-           <widget class="QGroupBox" name="GraphControls">
+           <widget class="QGroupBox" name="graph_controls">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="title">
              <string>Graph Controls</string>
             </property>
@@ -150,7 +164,7 @@
               <number>5</number>
              </property>
              <property name="bottomMargin">
-              <number>5</number>
+              <number>0</number>
              </property>
              <item>
               <widget class="QCheckBox" name="pressure_checkbox">
@@ -203,14 +217,21 @@
                </property>
               </widget>
              </item>
-             <item>
-              <widget class="QPushButton" name="export_2">
-               <property name="text">
-                <string>Export</string>
-               </property>
-              </widget>
-             </item>
             </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="save_data_to">
+            <property name="text">
+             <string>Save data to file:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="save">
+            <property name="text">
+             <string>Save</string>
+            </property>
            </widget>
           </item>
          </layout>
@@ -223,33 +244,33 @@
           <item>
            <widget class="QLabel" name="settings_description">
             <property name="text">
-             <string>Test and app settings</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:14pt;&quot;&gt;App settings&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="choose_date">
             <property name="text">
              <string>Choose date and time:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QDateTimeEdit" name="dateTimeEdit">
+           <widget class="QDateTimeEdit" name="date_time">
             <property name="calendarPopup">
              <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="choose_duration">
             <property name="text">
              <string>Choose duration:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="comboBox">
+           <widget class="QComboBox" name="duration">
             <item>
              <property name="text">
               <string/>
@@ -303,6 +324,25 @@
            </widget>
           </item>
           <item>
+           <widget class="QLabel" name="note">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Note: unspecified duration will run until manually stopped </string>
+            </property>
+            <property name="scaledContents">
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <spacer name="verticalSpacer_2">
             <property name="orientation">
              <enum>Qt::Vertical</enum>
@@ -322,7 +362,7 @@
      </layout>
     </item>
     <item row="0" column="0" colspan="4">
-     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
+     <layout class="QVBoxLayout" name="graph_window" stretch="0,0">
       <property name="bottomMargin">
        <number>0</number>
       </property>
@@ -346,16 +386,14 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>controls_settings_tab</tabstop>
   <tabstop>run_pause</tabstop>
   <tabstop>reset_stop</tabstop>
   <tabstop>pressure_checkbox</tabstop>
   <tabstop>temperature_checkbox</tabstop>
   <tabstop>legend_checkbox</tabstop>
-  <tabstop>export_2</tabstop>
-  <tabstop>dateTimeEdit</tabstop>
-  <tabstop>comboBox</tabstop>
-  <tabstop>toolbar</tabstop>
+  <tabstop>date_time</tabstop>
+  <tabstop>duration</tabstop>
   <tabstop>canvas</tabstop>
  </tabstops>
  <resources/>
