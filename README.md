@@ -10,3 +10,15 @@ pressure will fluctuate during a given time period.
 
 The code and software on this repository will be run on a Raspberry Pi 5 and will log the varying temperature and
 pressure readings.
+
+## TODO
+- [ ] Acquire sensors
+- [ ] Calibrate sensors
+- [ ] Design receivers to turn current mode to voltage
+- [ ] Create (low pass) filters to filter higher frequency noise
+- [ ] Create board for sensors, ADC, filters, amplifiers, etc.
+- [ ] Finish frontend app with QtDesigner
+- [ ] Add save file/path functionality for data to CSV
+- [ ] Add backend files to pull data from sensors from ADC on Raspberry Pi
+
+
