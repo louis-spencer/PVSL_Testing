@@ -16,8 +16,6 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import matplotlib.pyplot as plt
 
-from datetime import datetime
-
 
 class Ui_MainWindow(object):
 
@@ -205,6 +203,11 @@ class Ui_MainWindow(object):
         self.toolbar.setObjectName("toolbar")
         self.graph_window.addWidget(self.toolbar)
         #self.canvas = QtWidgets.QGraphicsView(self.centralwidget)
+        
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        ax.plot([0, 1, 3, 5, 6], '-')
+        self.canvas.draw()
 
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding,
                                            QtWidgets.QSizePolicy.Expanding)
@@ -292,25 +295,26 @@ class Ui_MainWindow(object):
         Saves the test results to a file specified by filepath
         """
         # open file dialog
-        fname = QtWidgets.QFileDialog.getOpenFileName(
-            self.centralwidget, "Open File", "",
-            "All Files (*);;Text Files(*.txt);;CSV Files(*.csv)")
+        current_QDate = QtCore.QDate.currentDate()
+        print(current_QDate.day())
+        name_type = "PV_{}_{}_{}".format(current_QDate.month(), current_QDate.day(), current_QDate.year())
+        fname, ftype = QtWidgets.QFileDialog.getSaveFileName(self.centralwidget, "Save File", name_type, "CSV Files(*.csv);;Text Files(*.txt);;All Files (*)")
+        
         if fname:
-            print(str(fname))
-        # TODO add functionality to write to file
+            fname = str(fname)
+            ftype = str(ftype)[-5:-1]
+            name_type = fname + ftype
+            with open(name_type, 'w') as f:
+                f.write(name_type)
+                f.close()
 
     def update_datetime(self):
         """
         Updates the app datetime to match internal Raspberry Pi datetime.
         """
-        # get the current raspberry pi datetime with datetime module
-        current_dt = datetime.now()
-        # convert to necessary datatype
-        current_QDate = QtCore.QDate(current_dt.year, current_dt.month,
-                                     current_dt.day)
-        current_QTime = QtCore.QTime(current_dt.hour, current_dt.minute,
-                                     current_dt.second)
-        # update the calendar datetime field
+        # QDate has some useful methods, same vernacular as QTime
+        current_QDate = QtCore.QDate.currentDate()
+        current_QTime = QtCore.QTime.currentTime()
         self.dateTimeEdit.setDate(current_QDate)
         self.dateTimeEdit.setTime(current_QTime)
 
