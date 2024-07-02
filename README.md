@@ -18,7 +18,7 @@ pressure readings.
 - [ ] Create (low pass) filters to filter higher frequency noise
 - [ ] Create board for sensors, ADC, filters, amplifiers, etc.
 - [ ] Finish frontend app with QtDesigner
-- [ ] Add save file/path functionality for data to CSV
+- [x] Add save file/path functionality for data to CSV
 - [ ] Add backend files to pull data from sensors from ADC on Raspberry Pi
 
 
