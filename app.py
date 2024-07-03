@@ -289,7 +289,7 @@ class Ui_MainWindow(object):
         self.controls_settings_tab.setTabText(
             self.controls_settings_tab.indexOf(self.settings_tab),
             _translate("MainWindow", "Settings"))
-
+            
     def save_file_dialog(self):
         """
         Saves the test results to a file specified by filepath
