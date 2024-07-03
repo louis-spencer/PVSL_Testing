@@ -12,6 +12,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.update_datetime()
         self.save.clicked.connect(self.save_file_dialog)
+        self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
 
     def save_file_dialog(self):
         """
@@ -35,10 +36,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 f.write(name_type)
                 f.close()
                 
-    def update_datetime(self):
+    def update_datetime(self, tabIndex=0):
         """
         Updates the app datetime to match the internal on Raspberry Pi
         """
+        print("Updated")
         current_QDate = QtCore.QDate.currentDate()
         current_QTime = QtCore.QTime.currentTime()
         self.date_time.setDate(current_QDate)
@@ -47,7 +49,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
-    window.show()
+    # as opposed to window.show(), opens on fullscreen
+    window.showMaximized()
     sys.exit(app.exec_())
-
-# NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
+"""
+NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
+NOTE: use > yapf -i main.py to autoformat according to pep8 formatting 
+"""
