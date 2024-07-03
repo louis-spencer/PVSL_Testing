@@ -19,6 +19,8 @@ pressure readings.
 - [ ] Create board for sensors, ADC, filters, amplifiers, etc.
 - [ ] Finish frontend app with QtDesigner
 - [x] Add save file/path functionality for data to CSV
+  - [ ] Make it decent :)
+- [ ] Create dialog when test time set to custom  
 - [ ] Add backend files to pull data from sensors from ADC on Raspberry Pi
 
 
