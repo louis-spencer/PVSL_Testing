@@ -306,6 +306,9 @@
           </item>
           <item>
            <widget class="QComboBox" name="duration">
+            <property name="accessibleName">
+             <string/>
+            </property>
             <item>
              <property name="text">
               <string/>
