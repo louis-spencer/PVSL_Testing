@@ -22,5 +22,6 @@ pressure readings.
   - [ ] Make it decent :)
 - [ ] Create dialog when test time set to custom  
 - [ ] Add backend files to pull data from sensors from ADC on Raspberry Pi
+- [x] Refactorize ui and main files :)
 
 
