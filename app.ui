@@ -28,6 +28,11 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
         </property>
@@ -103,6 +108,11 @@
              </property>
              <item>
               <widget class="QPushButton" name="run_pause">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true"/>
                </property>
@@ -119,6 +129,11 @@
              </item>
              <item>
               <widget class="QPushButton" name="reset_stop">
+               <property name="font">
+                <font>
+                 <pointsize>14</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Reset</string>
                </property>
@@ -234,6 +249,11 @@
           </item>
           <item>
            <widget class="QPushButton" name="save">
+            <property name="font">
+             <font>
+              <pointsize>14</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Save</string>
             </property>
@@ -382,10 +402,10 @@
        <number>0</number>
       </property>
       <item>
-       <widget class="QDial" name="toolbar"/>
+       <widget class="NavigationToolbar2QT" name="toolbar"/>
       </item>
       <item>
-       <widget class="QGraphicsView" name="canvas">
+       <widget class="FigureCanvasQTAgg" name="canvas">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -400,6 +420,18 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>NavigationToolbar2QT</class>
+   <extends>QDial</extends>
+   <header>matplotlib.backends.backend_qt5agg</header>
+  </customwidget>
+  <customwidget>
+   <class>FigureCanvasQTAgg</class>
+   <extends>QGraphicsView</extends>
+   <header>matplotlib.backends.backend_qt5agg</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>controls_settings_tab</tabstop>
   <tabstop>run_pause</tabstop>

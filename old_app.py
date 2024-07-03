@@ -315,8 +315,8 @@ class Ui_MainWindow(object):
         # QDate has some useful methods, same vernacular as QTime
         current_QDate = QtCore.QDate.currentDate()
         current_QTime = QtCore.QTime.currentTime()
-        self.dateTimeEdit.setDate(current_QDate)
-        self.dateTimeEdit.setTime(current_QTime)
+        self.date_time.setDate(current_QDate)
+        self.date_time.setTime(current_QTime)
 
 
 if __name__ == "__main__":
