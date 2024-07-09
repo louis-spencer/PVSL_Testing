@@ -7,6 +7,7 @@ from PyQt5 import QtWidgets
 from MainWindow import Ui_MainWindow
 from duration_dialog import Ui_Duration
 
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def __init__(self, *args, obj=None, **kwargs):
@@ -16,6 +17,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.save.clicked.connect(self.save_file_dialog)
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
         self.duration.currentIndexChanged.connect(self.open_duration_dialog)
+        
+        self.plot([1, 5, 2, 3, 5, 1, 4])
 
     def save_file_dialog(self):
         """
@@ -38,7 +41,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             with open(name_type, 'w') as f:
                 f.write(name_type)
                 f.close()
-                
+
     def update_datetime(self, tabIndex=0):
         """
         Updates the app datetime to match the internal on Raspberry Pi
@@ -48,7 +51,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         current_QTime = QtCore.QTime.currentTime()
         self.date_time.setDate(current_QDate)
         self.date_time.setTime(current_QTime)
-        
+
     def open_duration_dialog(self, arg):
         if arg == 0: self.duration = -1
         elif arg == 1: self.duration = 10
@@ -60,14 +63,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         elif arg == 9:
             dialog = DurationDialog(self)
             dialog.exec()
-    
+            
+    def plot(self, num):
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        ax.plot(num)
+        self.canvas.draw()
+
+
 class DurationDialog(QtWidgets.QDialog):
+
     def __init__(self, parent=None):
         print(parent)
         super().__init__(parent)
         self.ui = Ui_Duration()
         self.ui.setupUi(self)
         self.setWindowTitle("Set Duration")
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

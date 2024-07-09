@@ -24,4 +24,8 @@ pressure readings.
 - [ ] Add backend files to pull data from sensors from ADC on Raspberry Pi
 - [x] Refactorize ui and main files :)
 
+## Screenshots
+![The main screen of the application](./main_app.png)
+![Duration selection dialog](./duration_select_dialog.png)
+![File selection dialog](./file_select_dialog.png)
 
