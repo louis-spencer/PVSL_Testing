@@ -31,4 +31,4 @@ _Front page of the application_
 ![Duration selection dialog](./duration_select_dialog.png)
 _Duration selection dialog_
 ![File selection dialog](./file_select_dialog.png)
-_File selection dialog (native Qt)
+_File selection dialog (native Qt)_
