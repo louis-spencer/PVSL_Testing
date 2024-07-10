@@ -5,7 +5,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
 from MainWindow import Ui_MainWindow
-from duration_dialog import Ui_Duration
+from DurationDialog import Ui_Duration
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -15,11 +15,29 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.setWindowTitle("PV Testing")
         self.save.clicked.connect(self.save_file_dialog)
+        self.run_pause.clicked.connect(self.control_button_pressed)
+        self.reset_stop.clicked.connect(self.control_button_pressed)
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
-        self.duration.currentIndexChanged.connect(self.open_duration_dialog)
+        self.duration.currentIndexChanged.connect(self.open_DurationDialog)
+
+        self.file_format = {
+            "CSV Files (*.csv)": ".csv",
+            "Text Files (*.txt)": ".txt"
+        }
+        
+        # states for app operation
+        self.testing_states = {"waiting":0, "testing":1, "paused":2, "reset":3}
+        # waiting to start, testing, paused, reset
+        self.current_state = self.testing_states["waiting"]
         
         self.plot([1, 5, 2, 3, 5, 1, 4])
-
+        
+    def control_button_pressed(self):
+        # run/pause, reset/stop
+        object_name = self.focusWidget().objectName()
+        print(object_name)
+        
+        
     def save_file_dialog(self):
         """
         Saves the test results to a file specified by filepath
@@ -32,15 +50,35 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                                          current_QDate.year())
         fname, ftype = QtWidgets.QFileDialog.getSaveFileName(
             self.centralwidget, "Save File", name_type,
-            "CSV Files(*.csv);;Text Files(*.txt);;All Files (*)")
+            "CSV Files (*.csv);;Text Files (*.txt);;All Files (*)")
+        
+        fname = str(fname)
+        ftype = str(ftype)
+        
+        for file_format in self.file_format.values():
+            if file_format in fname:
+                ftype = ''
+                break
+        else:
+            ftype = self.file_format[ftype]
+        # full name with extension
+        full = fname + ftype
+        
+        # open file
+        with open(full, 'w') as f:
+            f.write(name_type)
+            f.write('\n')
+            f.write(QtCore.QDate.currentDate().toString())
+            f.write(" at ")
+            f.write(QtCore.QTime.currentTime().toString())
+            f.close()
+        
 
-        if fname:
-            fname = str(fname)
-            ftype = str(ftype)[-5:-1]
-            name_type = fname + ftype
-            with open(name_type, 'w') as f:
-                f.write(name_type)
-                f.close()
+        #ftype = str(ftype)[-5:-1]
+        #name_type = fname + ftype
+        #with open(name_type, 'w') as f:
+        #    f.write(name_type)
+        #    f.close()
 
     def update_datetime(self, tabIndex=0):
         """
@@ -52,8 +90,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.date_time.setDate(current_QDate)
         self.date_time.setTime(current_QTime)
 
-    def open_duration_dialog(self, arg):
+    def open_DurationDialog(self, arg):
         if arg == 0: self.duration = -1
+        # if self.duration = -1 then it runs until stopped
+        # otherwise, time in minutes
         elif arg == 1: self.duration = 10
         elif arg == 2: self.duration = 20
         elif arg == 3: self.duration = 30
@@ -63,7 +103,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         elif arg == 9:
             dialog = DurationDialog(self)
             dialog.exec()
-            
+
     def plot(self, num):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
