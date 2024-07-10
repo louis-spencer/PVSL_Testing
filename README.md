@@ -9,7 +9,8 @@ accomplished by using an absolute pressure transducer and a resistance temperatu
 pressure will fluctuate during a given time period.
 
 The code and software on this repository will be run on a Raspberry Pi 5 and will log the varying temperature and
-pressure readings.
+pressure readings. The frontend is handled by PyQt5 with graphing capabilities being handled by matplotlib and numpy.
+Backend will most likely be handled by Python or C for processing with a pipe to transmit sensor data.
 
 ## TODO
 - [ ] Acquire sensors
@@ -26,6 +27,8 @@ pressure readings.
 
 ## Screenshots
 ![The main screen of the application](./main_app.png)
+_Front page of the application_
 ![Duration selection dialog](./duration_select_dialog.png)
+_Duration selection dialog_
 ![File selection dialog](./file_select_dialog.png)
-
+_File selection dialog (native Qt)_
