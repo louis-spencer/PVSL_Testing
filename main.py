@@ -7,10 +7,15 @@ from PyQt5 import QtWidgets
 from MainWindow import Ui_MainWindow
 from DurationDialog import Ui_Duration
 
+from enum import Enum
+state_t = Enum("state_t", "waiting running paused reset")
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-
-    def __init__(self, *args, obj=None, **kwargs):
+    """
+    The main application window, containing the controls and the matplotlib graph
+    """
+    
+    def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
         self.setWindowTitle("PV Testing")
@@ -20,41 +25,60 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
         self.duration.currentIndexChanged.connect(self.open_DurationDialog)
 
+        # add DurationDialog
+        self.dialog = DurationDialog(self)
+
+        # duration of the test
+        self.timer_duration = 30
+
+        # different file formats to be saved
         self.file_format = {
             "CSV Files (*.csv)": ".csv",
             "Text Files (*.txt)": ".txt"
         }
+
         
-        # states for app operation
-        self.testing_states = {"waiting":0, "testing":1, "paused":2, "reset":3}
-        # waiting to start, testing, paused, reset
-        self.current_state = self.testing_states["waiting"]
-        
+        self.current_state = state_t.waiting
+
         self.plot([1, 5, 2, 3, 5, 1, 4])
-        
+
     def control_button_pressed(self):
+        """
+        Functionality for the start/stop control buttons
+        """
         # run/pause, reset/stop
         object_name = self.focusWidget().objectName()
-        print(object_name)
+        print(object_name, self.current_state)
+        if self.current_state == state_t.waiting or self.current_state == state_t.paused:
+            if object_name == "run_pause":
+                self.run_pause.setText("Pause")
+                self.reset_stop.setText("Stop")
+                self.current_state == state_t.running
+        elif self.current_state == state_t.running:
+            if object_name == "run_pause":
+                self.run_pause.setText("Resume")
+                self.current_state == state_t.paused
         
         
+
     def save_file_dialog(self):
         """
         Saves the test results to a file specified by filepath
         """
         # open file dialog
         current_QDate = QtCore.QDate.currentDate()
-        print(current_QDate.day())
         name_type = "PV_{}_{}_{}".format(current_QDate.month(),
                                          current_QDate.day(),
                                          current_QDate.year())
         fname, ftype = QtWidgets.QFileDialog.getSaveFileName(
             self.centralwidget, "Save File", name_type,
             "CSV Files (*.csv);;Text Files (*.txt);;All Files (*)")
-        
+
         fname = str(fname)
         ftype = str(ftype)
-        
+
+        if fname == '': return
+
         for file_format in self.file_format.values():
             if file_format in fname:
                 ftype = ''
@@ -63,7 +87,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             ftype = self.file_format[ftype]
         # full name with extension
         full = fname + ftype
-        
+
         # open file
         with open(full, 'w') as f:
             f.write(name_type)
@@ -72,39 +96,42 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             f.write(" at ")
             f.write(QtCore.QTime.currentTime().toString())
             f.close()
-        
 
-        #ftype = str(ftype)[-5:-1]
-        #name_type = fname + ftype
-        #with open(name_type, 'w') as f:
-        #    f.write(name_type)
-        #    f.close()
-
-    def update_datetime(self, tabIndex=0):
+    def update_datetime(self):
         """
         Updates the app datetime to match the internal on Raspberry Pi
         """
-        print("Updated")
         current_QDate = QtCore.QDate.currentDate()
         current_QTime = QtCore.QTime.currentTime()
         self.date_time.setDate(current_QDate)
         self.date_time.setTime(current_QTime)
 
     def open_DurationDialog(self, arg):
-        if arg == 0: self.duration = -1
-        # if self.duration = -1 then it runs until stopped
-        # otherwise, time in minutes
-        elif arg == 1: self.duration = 10
-        elif arg == 2: self.duration = 20
-        elif arg == 3: self.duration = 30
-        elif arg == 4: self.duration = 45
-        elif arg == 5: self.duration = 60
-        elif arg == 6: self.duration = 75
-        elif arg == 9:
-            dialog = DurationDialog(self)
-            dialog.exec()
+        """
+        Define the amount of time for the test
+        """
+        timer_duration_dict = {
+            0: -1,
+            1: 10,
+            2: 20,
+            3: 30,
+            4: 45,
+            5: 60,
+            6: 120,
+            7: 240,
+            8: 600
+        }
+        if arg == 9:
+            if self.dialog.exec():
+                self.timer_duration = self.dialog.get_duration()
+        else:
+            self.timer_duration = timer_duration_dict[arg]
+        print(arg, self.timer_duration)
 
     def plot(self, num):
+        """
+        Plots array num to the canvas
+        """
         self.figure.clear()
         ax = self.figure.add_subplot(111)
         ax.plot(num)
@@ -112,13 +139,23 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 
 class DurationDialog(QtWidgets.QDialog):
+    """
+    Dialog that pops up when "Custom" option is selected for duration.
+    """
 
     def __init__(self, parent=None):
-        print(parent)
         super().__init__(parent)
         self.ui = Ui_Duration()
         self.ui.setupUi(self)
         self.setWindowTitle("Set Duration")
+        self.ui.minute_box.setMaximum(59)
+        self.ui.cancel_ok.accepted.connect(self.get_duration)
+
+    def get_duration(self):
+        """
+        Return the spinbox values for hour and time as a tuple.
+        """
+        return (self.ui.hour_box.value(), self.ui.minute_box.value())
 
 
 if __name__ == "__main__":
@@ -131,4 +168,5 @@ if __name__ == "__main__":
 """
 NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
 NOTE: use > yapf -i main.py to autoformat according to pep8 formatting 
+NOTE: use > pylint main.py to check the readability of the code
 """

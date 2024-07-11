@@ -109,6 +109,10 @@ class Ui_Duration(object):
             _translate("Duration", "Select a duration:"))
         self.hours.setText(_translate("Duration", "hr(s)"))
         self.minutes.setText(_translate("Duration", "min(s)"))
+        
+    #def accept(self, Duration):
+    #        print("yippeee")
+    #        Duration.accept()
 
 
 if __name__ == "__main__":
