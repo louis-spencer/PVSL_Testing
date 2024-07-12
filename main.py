@@ -8,13 +8,15 @@ from MainWindow import Ui_MainWindow
 from DurationDialog import Ui_Duration
 
 from enum import Enum
+
 state_t = Enum("state_t", "waiting running paused reset")
+
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     """
     The main application window, containing the controls and the matplotlib graph
     """
-    
+
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
@@ -37,7 +39,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             "Text Files (*.txt)": ".txt"
         }
 
-        
         self.current_state = state_t.waiting
 
         self.plot([1, 5, 2, 3, 5, 1, 4])
@@ -58,8 +59,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if object_name == "run_pause":
                 self.run_pause.setText("Resume")
                 self.current_state == state_t.paused
-        
-        
 
     def save_file_dialog(self):
         """
@@ -169,4 +168,6 @@ if __name__ == "__main__":
 NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
 NOTE: use > yapf -i main.py to autoformat according to pep8 formatting 
 NOTE: use > pylint main.py to check the readability of the code
+NOTE: generating image with scipy and then updating a Qt image widget might be faster
+      check John's "Signal Delay System" repository
 """
