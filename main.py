@@ -7,9 +7,9 @@ from PyQt5 import QtWidgets
 from MainWindow import Ui_MainWindow
 from DurationDialog import Ui_Duration
 
-from enum import Enum
+#from enum import Enum
 
-state_t = Enum("state_t", "waiting running paused reset")
+#state_t = Enum("state_t", "waiting running paused reset")
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             "Text Files (*.txt)": ".txt"
         }
 
-        self.current_state = state_t.waiting
+        self.current_state = "waiting"
 
         self.plot([1, 5, 2, 3, 5, 1, 4])
 
@@ -49,16 +49,22 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         # run/pause, reset/stop
         object_name = self.focusWidget().objectName()
-        print(object_name, self.current_state)
-        if self.current_state == state_t.waiting or self.current_state == state_t.paused:
-            if object_name == "run_pause":
-                self.run_pause.setText("Pause")
-                self.reset_stop.setText("Stop")
-                self.current_state == state_t.running
-        elif self.current_state == state_t.running:
-            if object_name == "run_pause":
-                self.run_pause.setText("Resume")
-                self.current_state == state_t.paused
+                    
+        if self.current_state == "waiting" and object_name == "run_pause":
+            self.run_pause.setText("Pause")
+            self.reset_stop.setText("Stop")
+            self.current_state = "running"
+        elif self.current_state == "running" and object_name == "run_pause":
+            self.run_pause.setText("Resume")
+            self.current_state = "paused"
+        elif self.current_state == "paused" and object_name == "run_pause":
+            self.run_pause.setText("Pause")
+            self.current_state = "running"
+        elif object_name == "reset_stop" and self.current_state in ["running", "paused"]:
+            self.run_pause.setText("Start")
+            self.reset_stop.setText("Reset")
+            self.current_state = "waiting"
+
 
     def save_file_dialog(self):
         """
@@ -110,21 +116,25 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Define the amount of time for the test
         """
         timer_duration_dict = {
-            0: -1,
-            1: 10,
-            2: 20,
-            3: 30,
-            4: 45,
-            5: 60,
-            6: 120,
-            7: 240,
-            8: 600
+            0: (-1,0),
+            1: (0,10),
+            2: (0,20),
+            3: (0,30),
+            4: (0,45),
+            5: (1,0),
+            6: (2,0),
+            7: (4,0),
+            8: (10,0)
         }
         if arg == 9:
             if self.dialog.exec():
                 self.timer_duration = self.dialog.get_duration()
+                hr_str = '' if self.timer_duration[0] == 0 else f"{self.timer_duration[0]}hr "
+                min_str = '' if self.timer_duration[1] == 0 else f"{self.timer_duration[1]}min"
+                self.duration.setItemText(arg, hr_str + min_str)
         else:
             self.timer_duration = timer_duration_dict[arg]
+            self.duration.setItemText(9, "Custom...")
         print(arg, self.timer_duration)
 
     def plot(self, num):
@@ -161,8 +171,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     # as opposed to window.show(), opens on fullscreen
-    #window.showMaximized()
-    window.show()
+    window.showMaximized()
+    #window.show()
     sys.exit(app.exec_())
 """
 NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
