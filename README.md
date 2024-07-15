@@ -14,6 +14,10 @@ Backend will most likely be handled by Python or C for processing with a pipe to
 The UI (with exception to matplotlib and associated navigation bar) were
 made using QtDesigner. The UI files are found in .ui directory.
 
+--> main --+--> matplotlib
+		   |
+		   +--> pyqtgraph
+
 ## TODO
 - [ ] Acquire sensors
   - [ ] RTD acquired
