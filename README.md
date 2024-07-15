@@ -26,10 +26,11 @@ made using QtDesigner. The UI files are found in .ui directory.
 - [x] Add save file/path functionality for data to CSV
   - [x] Make it decent :)
 - [x] Create dialog when test time set to custom
-  - [ ] Add save time functionality
-  - [ ] Display time instead of "custom"
+  - [x] Add save time functionality
+  - [x] Display time instead of "custom"
 - [ ] Add backend files to pull data from sensors from ADC on Raspberry Pi
 - [x] Refactorize ui and main files :)
+- [ ] Substitute matplotlib for pyqtgraph?
 
 ## Screenshots
 ![The main screen of the application](./images/main_app.png)
