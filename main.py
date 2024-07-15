@@ -1,16 +1,17 @@
-import sys
+#-----------------------------------------------------------------------
+# MainWindow.py
+#
+# PyQt UI for the main window and dialog, provides all widgets and
+# layouts
+#-----------------------------------------------------------------------
 
+import sys
 from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
 from MainWindow import Ui_MainWindow
 from DurationDialog import Ui_Duration
-
-#from enum import Enum
-
-#state_t = Enum("state_t", "waiting running paused reset")
-
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     """
@@ -20,34 +21,41 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
         self.setupUi(self)
+        
+        # Set the window title of the application
         self.setWindowTitle("PV Testing")
+        
+        # Connect save button functionality
         self.save.clicked.connect(self.save_file_dialog)
+        
+        # Connect control button functionality
         self.run_pause.clicked.connect(self.control_button_pressed)
         self.reset_stop.clicked.connect(self.control_button_pressed)
+        
+        # Update datetime whenever tab is switched
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
+        
+        # Open dialog to choose test duration
         self.duration.currentIndexChanged.connect(self.open_DurationDialog)
 
-        # add DurationDialog
+        # Attach dialog to main
         self.dialog = DurationDialog(self)
-
-        # duration of the test
-        self.timer_duration = 30
-
-        # different file formats to be saved
+        
+        # File formats to be used when saving files
         self.file_format = {
             "CSV Files (*.csv)": ".csv",
             "Text Files (*.txt)": ".txt"
         }
 
         self.current_state = "waiting"
-
+        self.timer_duration = 30
         self.plot([1, 5, 2, 3, 5, 1, 4])
 
     def control_button_pressed(self):
         """
-        Functionality for the start/stop control buttons
+        Functionality for the start/stop and reset/stop control buttons
         """
-        # run/pause, reset/stop
+        # Get the name of the widget, either run/pause or reset/stop
         object_name = self.focusWidget().objectName()
                     
         if self.current_state == "waiting" and object_name == "run_pause":
@@ -70,11 +78,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         Saves the test results to a file specified by filepath
         """
-        # open file dialog
+        # Get the current date from Qt library
         current_QDate = QtCore.QDate.currentDate()
+        
+        # Create the file name based off of the current day
         name_type = "PV_{}_{}_{}".format(current_QDate.month(),
                                          current_QDate.day(),
                                          current_QDate.year())
+                                         
+        # Get the file name and type from the line editor in the dialog
         fname, ftype = QtWidgets.QFileDialog.getSaveFileName(
             self.centralwidget, "Save File", name_type,
             "CSV Files (*.csv);;Text Files (*.txt);;All Files (*)")
@@ -83,17 +95,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         ftype = str(ftype)
 
         if fname == '': return
-
+        
+        # Iterate through file formats and see if match in file name
         for file_format in self.file_format.values():
             if file_format in fname:
                 ftype = ''
                 break
         else:
             ftype = self.file_format[ftype]
-        # full name with extension
+
+        # Combine the name and extension
         full = fname + ftype
 
-        # open file
+        # Open file using given name and extension
         with open(full, 'w') as f:
             f.write(name_type)
             f.write('\n')
@@ -106,6 +120,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         """
         Updates the app datetime to match the internal on Raspberry Pi
         """
+        # Get the current datetime from QtCore library
         current_QDate = QtCore.QDate.currentDate()
         current_QTime = QtCore.QTime.currentTime()
         self.date_time.setDate(current_QDate)
@@ -116,6 +131,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         Define the amount of time for the test
         """
         timer_duration_dict = {
+            # Formatted in (hours, minutes)
             0: (-1,0),
             1: (0,10),
             2: (0,20),
@@ -126,13 +142,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             7: (4,0),
             8: (10,0)
         }
+        
+        # Functionality for "Custom..." argument
         if arg == 9:
+            
+            # Open dialog, save result and change text to custom duration
             if self.dialog.exec():
                 self.timer_duration = self.dialog.get_duration()
                 hr_str = '' if self.timer_duration[0] == 0 else f"{self.timer_duration[0]}hr "
                 min_str = '' if self.timer_duration[1] == 0 else f"{self.timer_duration[1]}min"
                 self.duration.setItemText(arg, hr_str + min_str)
         else:
+            
+            # Argument indexes dictionary
             self.timer_duration = timer_duration_dict[arg]
             self.duration.setItemText(9, "Custom...")
         print(arg, self.timer_duration)
@@ -156,6 +178,8 @@ class DurationDialog(QtWidgets.QDialog):
         super().__init__(parent)
         self.ui = Ui_Duration()
         self.ui.setupUi(self)
+        
+        # Set dialog window title
         self.setWindowTitle("Set Duration")
         self.ui.minute_box.setMaximum(59)
         self.ui.cancel_ok.accepted.connect(self.get_duration)
@@ -170,10 +194,13 @@ class DurationDialog(QtWidgets.QDialog):
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
-    # as opposed to window.show(), opens on fullscreen
+    
+    # Opens window on fullscreen
+    # TODO: fullscreen should cover taskbar
     window.showMaximized()
     #window.show()
     sys.exit(app.exec_())
+    
 """
 NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
 NOTE: use > yapf -i main.py to autoformat according to pep8 formatting 
