@@ -10,11 +10,11 @@ from PyQt5 import QtCore
 from PyQt5 import QtGui
 from PyQt5 import QtWidgets
 
-from MainWindow import Ui_MainWindow
-from DurationDialog import Ui_Duration
+from MainWindow import MainWindow_ui
+from DurationDialog import DurationDialog_ui
 
 
-class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
+class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
     """
     The main application window, containing the controls and the matplotlib graph
     """
@@ -37,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
 
         # Open dialog to choose test duration
-        self.duration.currentIndexChanged.connect(self.open_DurationDialog)
+        self.duration.currentIndexChanged.connect(self.open_duration_dialog)
 
         # Attach dialog to main
         self.dialog = DurationDialog(self)
@@ -142,7 +142,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.date_time.setDate(current_QDate)
         self.date_time.setTime(current_QTime)
 
-    def open_DurationDialog(self, arg):
+    def open_duration_dialog(self, arg):
         """
         Define the amount of time for the test
         """
@@ -182,7 +182,7 @@ class DurationDialog(QtWidgets.QDialog):
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.ui = Ui_Duration()
+        self.ui = DurationDialog_ui()
         self.ui.setupUi(self)
 
         # Set dialog window title
@@ -212,4 +212,6 @@ NOTE: use > yapf -i main.py to autoformat according to pep8 formatting
 NOTE: use > pylint main.py to check the readability of the code
 NOTE: generating image with scipy and then updating a Qt image widget might be faster
       check John's "Signal Delay System" repository
+TODO: create a PlotWidget.py file to handle graphing data in both matplotlib and pyqtgraph
+      create different git branches to handle respectively
 """

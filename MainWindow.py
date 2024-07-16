@@ -24,7 +24,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import matplotlib.pyplot as plt
 
 
-class Ui_MainWindow(object):
+class MainWindow_ui(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -297,7 +297,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = QtWidgets.QMainWindow()
-    ui = Ui_MainWindow()
+    ui = MainWindow_ui()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
