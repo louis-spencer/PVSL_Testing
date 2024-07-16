@@ -37,7 +37,7 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
 
         # Open dialog to choose test duration
-        self.duration.currentIndexChanged.connect(self.open_duration_dialog)
+        self.duration_combobox.currentIndexChanged.connect(self.open_duration_dialog)
 
         # Attach dialog to main
         self.dialog = DurationDialog(self)
@@ -73,6 +73,7 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
         # Get the name of the widget, either run/pause or reset/stop
         object_name = self.focusWidget().objectName()
 
+        # Toggle between paused and running if the program has been started
         if self.current_state == "waiting" and object_name == "run_pause":
             self.run_pause.setText("Pause")
             self.reset_stop.setText("Stop")
@@ -157,12 +158,12 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
                     0] == 0 else f"{self.timer_duration[0]}hr "
                 min_str = '' if self.timer_duration[
                     1] == 0 else f"{self.timer_duration[1]}min"
-                self.duration.setItemText(arg, hr_str + min_str)
+                self.duration_combobox.setItemText(arg, hr_str + min_str)
         else:
 
             # Argument indexes dictionary
             self.timer_duration = self.timer_duration_dict[arg]
-            self.duration.setItemText(9, "Custom...")
+            self.duration_combobox.setItemText(9, "Custom...")
         print(arg, self.timer_duration)
 
     def plot(self, num):
@@ -187,14 +188,14 @@ class DurationDialog(QtWidgets.QDialog):
 
         # Set dialog window title
         self.setWindowTitle("Set Duration")
-        self.ui.minute_box.setMaximum(59)
+        self.ui.minute_spinbox.setMaximum(59)
         self.ui.cancel_ok.accepted.connect(self.get_duration)
 
     def get_duration(self):
         """
         Return the spinbox values for hour and time as a tuple.
         """
-        return (self.ui.hour_box.value(), self.ui.minute_box.value())
+        return (self.ui.hour_spinbox.value(), self.ui.minute_spinbox.value())
 
 
 if __name__ == "__main__":

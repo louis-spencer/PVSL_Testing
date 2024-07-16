@@ -305,7 +305,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="duration">
+           <widget class="QComboBox" name="duration_combobox">
             <property name="accessibleName">
              <string/>
             </property>
@@ -443,7 +443,7 @@
   <tabstop>temperature_checkbox</tabstop>
   <tabstop>legend_checkbox</tabstop>
   <tabstop>date_time</tabstop>
-  <tabstop>duration</tabstop>
+  <tabstop>duration_combobox</tabstop>
   <tabstop>canvas</tabstop>
  </tabstops>
  <resources/>
