@@ -12,6 +12,8 @@ from PyQt5 import QtWidgets
 
 from MainWindow import MainWindow_ui
 from DurationDialog import DurationDialog_ui
+import matplotlib
+from PlotWidget import PlotWidget
 
 
 class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
@@ -37,7 +39,8 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
 
         # Open dialog to choose test duration
-        self.duration_combobox.currentIndexChanged.connect(self.open_duration_dialog)
+        self.duration_combobox.currentIndexChanged.connect(
+            self.open_duration_dialog)
 
         # Attach dialog to main
         self.dialog = DurationDialog(self)
@@ -50,8 +53,7 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
 
         self.current_state = "waiting"
         self.timer_duration = 30
-        self.plot([1, 5, 2, 3, 5, 1, 4])
-        
+
         # Dictionary with different default times
         self.timer_duration_dict = {
             # Formatted in (hours, minutes)
@@ -65,6 +67,10 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
             7: (4, 0),
             8: (10, 0)
         }
+        
+        # PlotWidget
+        self.PlotWidget = PlotWidget(self)
+        
 
     def control_button_pressed(self):
         """
@@ -147,7 +153,7 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
         """
         Define the amount of time for the test
         """
-        
+
         # Functionality for "Custom..." argument
         if arg == 9:
 
@@ -165,15 +171,6 @@ class MainWindow(QtWidgets.QMainWindow, MainWindow_ui):
             self.timer_duration = self.timer_duration_dict[arg]
             self.duration_combobox.setItemText(9, "Custom...")
         print(arg, self.timer_duration)
-
-    def plot(self, num):
-        """
-        Plots array num to the canvas
-        """
-        self.figure.clear()
-        ax = self.figure.add_subplot(111)
-        ax.plot(num)
-        self.canvas.draw()
 
 
 class DurationDialog(QtWidgets.QDialog):
@@ -200,12 +197,16 @@ class DurationDialog(QtWidgets.QDialog):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    #.QApplication.setStyle(QtWidgets.QStyleFactory.create('gtk2'))
     window = MainWindow()
 
     # Opens window on fullscreen
     # TODO: fullscreen should cover taskbar
     window.showMaximized()
     #window.show()
+    
+    window.PlotWidget.plot([1, 2, 3, 4], [1, 5, 1, 5])
+    
     sys.exit(app.exec_())
 """
 NOTE: pyqtgraph might be faster than matplotlib, worth checking out?
