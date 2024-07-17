@@ -3,6 +3,9 @@ This is the respository that will be used for storing all of the software and sc
 The project integrates multiple different aspects, including computer and electrical engineering, software development,
 PCB design, and some mechanics.
 
+__NOTE:__ This branch uses matplotlib as the plotting module. Difficult to set up realtime rendering as PyQt uses 'Agg' backend, which does not support figures.
+
+
 ## Goal
 The goal for this project is to create a system that can automatically detect leaks in naval pressure vessels. This is
 accomplished by using an absolute pressure transducer and a resistance temperature detector (RTD) to determine whether

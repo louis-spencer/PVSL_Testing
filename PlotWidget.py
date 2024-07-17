@@ -1,3 +1,10 @@
+#-----------------------------------------------------------------------
+# PlotWidget.py
+#
+# Adds functionality to plotting widgets. Note: with matplotlib,
+# realtime graphing gets annoying to set up.
+#-----------------------------------------------------------------------
+
 import sys
 from PyQt5 import QtCore
 from PyQt5 import QtGui
