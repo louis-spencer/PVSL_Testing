@@ -214,6 +214,8 @@ NOTE: use > yapf -i main.py to autoformat according to pep8 formatting
 NOTE: use > pylint main.py to check the readability of the code
 NOTE: generating image with scipy and then updating a Qt image widget might be faster
       check John's "Signal Delay System" repository
+NOTE: import the preferred PyQt package before importing pyqtgraph as
+	  it will force pyqtgraph to use the right package
 TODO: create a PlotWidget.py file to handle graphing data in both matplotlib and pyqtgraph
       create different git branches to handle respectively
 """
