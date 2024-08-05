@@ -400,15 +400,12 @@
      </layout>
     </item>
     <item row="0" column="0" colspan="4">
-     <layout class="QVBoxLayout" name="graph_window" stretch="0,0">
+     <layout class="QVBoxLayout" name="graph_window" stretch="0">
       <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
-       <widget class="NavigationToolbar2QT" name="toolbar"/>
-      </item>
-      <item>
-       <widget class="FigureCanvasQTAgg" name="canvas">
+       <widget class="PlotWidget" name="canvas">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
           <horstretch>0</horstretch>
@@ -425,14 +422,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>NavigationToolbar2QT</class>
-   <extends>QDial</extends>
-   <header>matplotlib.backends.backend_qt5agg</header>
-  </customwidget>
-  <customwidget>
-   <class>FigureCanvasQTAgg</class>
+   <class>PlotWidget</class>
    <extends>QGraphicsView</extends>
-   <header>matplotlib.backends.backend_qt5agg</header>
+   <header>pyqtgraph.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

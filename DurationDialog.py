@@ -16,7 +16,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class DurationDialog_ui(object):
+class Ui_DurationDialog(object):
 
     def setupUi(self, Duration):
         Duration.setObjectName("Duration")
@@ -122,7 +122,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     Duration = QtWidgets.QDialog()
-    ui = DurationDialog_ui()
+    ui = Ui_DurationDialog()
     ui.setupUi(Duration)
     Duration.show()
     sys.exit(app.exec_())
