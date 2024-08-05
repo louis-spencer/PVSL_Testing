@@ -18,9 +18,8 @@ The UI (with exception to matplotlib and associated navigation bar) were
 made using QtDesigner. The UI files are found in .ui directory.
 
 ```txt
-main --+--> pyqtgraph (main)
-       |
-       +--> matplotlib 
+main --*--> pyqtgraph (main)
+       \--> matplotlib 
 ```
 ## TODO
 - [ ] Acquire sensors
