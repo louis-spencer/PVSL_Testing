@@ -1,40 +1,49 @@
+#-----------------------------------------------------------------------
+# MainWindow.py
+#
+# PyQt UI for the main window and dialog, provides all widgets and
+# layouts. Uses pyqtgraph for data visualization.
+#-----------------------------------------------------------------------
+
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from MainWindow import Ui_MainWindow
 from DurationDialog import Ui_DurationDialog
 import pyqtgraph
 
-class App(QtWidgets.QMainWindow, Ui_MainWindow):
+
+class PVApp(QtWidgets.QMainWindow, Ui_MainWindow):
+
     def __init__(self, *args, **kwargs):
         # Initialization
         super().__init__(*args, **kwargs)
         self.setupUi(self)
-        
+
         # Set window title of app
         self.setWindowTitle("PV Testing")
-        
+
         # Functional save button
         self.save.clicked.connect(self.save_file_dialog)
-        
+
         # Functional control buttons
         self.run_pause_btn.clicked.connect(self.control_button_pressed)
         self.reset_stop_btn.clicked.connect(self.control_button_pressed)
         self.curr_state = "waiting"
-        
-        
+
         # Functional datetime
         self.controls_settings_tab.tabBarClicked.connect(self.update_datetime)
-        
+
         # Functional duration dialog
-        self.duration_combobox.currentIndexChanged.connect(self.open_duration_dialog)
+        self.duration_combobox.currentIndexChanged.connect(
+            self.open_duration_dialog)
         self.dialog = DurationDialog(self)
-        
+
         # Save file formats
         self.file_formats = {
             "CSV Files (*.csv)": ".csv",
             "Text Files (*.txt)": ".txt"
         }
-        
+
         # Default test times
         self.curr_duration = 30
         self.timer_durations = {
@@ -48,7 +57,7 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
             7: (4, 0),
             8: (10, 0)
         }
-        
+
     def control_button_pressed(self):
         """
         Functionality for the start/stop and reset/stop control buttons
@@ -73,7 +82,8 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
             self.run_pause_btn.setText("Start")
             self.reset_stop_btn.setText("Reset")
             self.curr_state = "waiting"
-            
+        print("state: {}".format(self.curr_state))
+
     def save_file_dialog(self):
         """
         Saves the test results to a file specified by filepath
@@ -115,6 +125,7 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
             f.write(" at ")
             f.write(QtCore.QTime.currentTime().toString())
             f.close()
+
     def update_datetime(self):
         """
         Updates the app datetime to match the internal on Raspberry Pi
@@ -135,24 +146,26 @@ class App(QtWidgets.QMainWindow, Ui_MainWindow):
 
             # Open dialog, save result and change text to custom duration
             if self.dialog.exec():
-                self.timer_duration = self.dialog.get_duration()
-                hr_str = '' if self.timer_duration[
-                    0] == 0 else f"{self.timer_duration[0]}hr "
-                min_str = '' if self.timer_duration[
-                    1] == 0 else f"{self.timer_duration[1]}min"
+                self.curr_duration = self.dialog.get_duration()
+                hr_str = '' if self.curr_duration[
+                    0] == 0 else f"{self.curr_duration[0]}hr "
+                min_str = '' if self.curr_duration[
+                    1] == 0 else f"{self.curr_duration[1]}min"
                 self.duration_combobox.setItemText(arg, hr_str + min_str)
         else:
 
             # Argument indexes dictionary
-            self.timer_duration = self.timer_duration_dict[arg]
+            self.curr_duration = self.timer_durations[arg]
             self.duration_combobox.setItemText(9, "Custom...")
-        print(arg, self.timer_duration)
-        
+        print("index: {}\tcurr_duration: {}".format(
+            arg, self.curr_duration[0] * 60 + self.curr_duration[1]))
+
     def get_duration(self):
         """
         Return the spinbox values for hour and time as a tuple.
         """
         return (self.ui.hour_spinbox.value(), self.ui.minute_spinbox.value())
+
 
 class DurationDialog(QtWidgets.QDialog):
     """
@@ -177,7 +190,7 @@ class DurationDialog(QtWidgets.QDialog):
 
 
 if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    window = App()
-    window.show()
-    sys.exit(app.exec())
+    qApp = QtWidgets.QApplication(sys.argv)
+    appWindow = PVApp()
+    appWindow.show()
+    sys.exit(qApp.exec())
