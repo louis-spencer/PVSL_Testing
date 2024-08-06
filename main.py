@@ -10,6 +10,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from MainWindow import Ui_MainWindow
 from DurationDialog import Ui_DurationDialog
 import pyqtgraph
+import numpy
 
 
 class PVApp(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -21,7 +22,12 @@ class PVApp(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Set window title of app
         self.setWindowTitle("PV Testing")
-
+        self.controls_settings_tab.setCurrentWidget(self.controls_tab)
+        
+        # Set up timer
+        #self.timer = QtCore.QTimer()
+        #self.timer.setInterval(300)
+        
         # Functional save button
         self.save.clicked.connect(self.save_file_dialog)
 
@@ -70,18 +76,25 @@ class PVApp(QtWidgets.QMainWindow, Ui_MainWindow):
             self.run_pause_btn.setText("Pause")
             self.reset_stop_btn.setText("Stop")
             self.curr_state = "running"
+            
+            self.plot()
         elif self.curr_state == "running" and object_name == "run_pause_btn":
             self.run_pause_btn.setText("Resume")
             self.curr_state = "paused"
         elif self.curr_state == "paused" and object_name == "run_pause_btn":
             self.run_pause_btn.setText("Pause")
             self.curr_state = "running"
+            
+            self.plot()
         elif object_name == "reset_stop_btn" and self.curr_state in [
                 "running", "paused"
         ]:
             self.run_pause_btn.setText("Start")
             self.reset_stop_btn.setText("Reset")
             self.curr_state = "waiting"
+        elif object_name == "reset_stop_btn" and self.curr_state == "waiting":
+            self.canvas.clear()
+            
         print("state: {}".format(self.curr_state))
 
     def save_file_dialog(self):
@@ -165,6 +178,19 @@ class PVApp(QtWidgets.QMainWindow, Ui_MainWindow):
         Return the spinbox values for hour and time as a tuple.
         """
         return (self.ui.hour_spinbox.value(), self.ui.minute_spinbox.value())
+        
+    def plot(self):
+        x = [i for i in range(200)]
+        y = numpy.random.normal(size=200)
+        self.canvas.clear()
+        try:
+            A
+        except NameError:
+            A = self.canvas.plot(x, y)
+        else:
+            A.setData(x, y)
+            
+        #print(self.canvas.plot.__doc__)
 
 
 class DurationDialog(QtWidgets.QDialog):
@@ -193,4 +219,5 @@ if __name__ == "__main__":
     qApp = QtWidgets.QApplication(sys.argv)
     appWindow = PVApp()
     appWindow.show()
+    appWindow.plot()
     sys.exit(qApp.exec())
