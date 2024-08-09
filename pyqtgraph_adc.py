@@ -30,7 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.line = self.plot_graph.plot( self.time, self.pressure)
         
         self.timer = QtCore.QTimer()
-        self.timer.setInterval(300)
+        self.timer.setInterval(1000)
         self.timer.timeout.connect(self.update_plot)
         self.timer.start()
         
