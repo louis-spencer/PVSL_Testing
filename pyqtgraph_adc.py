@@ -20,7 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.plot_graph.showGrid(x=True, y=True)
         self.plot_graph.setLabel("left", "Pressure (PSI)")
         self.plot_graph.setLabel("bottom", "Time (s)")
-        self.plot_graph.setYRange(0, 45)
+        self.plot_graph.setYRange(0, 30)
         
         self.time = list(range(10))
         self.pressure = []
