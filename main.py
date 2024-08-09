@@ -218,6 +218,6 @@ class DurationDialog(QtWidgets.QDialog):
 if __name__ == "__main__":
     qApp = QtWidgets.QApplication(sys.argv)
     appWindow = PVApp()
-    appWindow.show()
+    appWindow.showMaximized()
     appWindow.plot()
     sys.exit(qApp.exec())
